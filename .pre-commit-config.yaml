@@ -14,4 +14,5 @@ repos:
     rev: v1.2.0
     hooks:
       - id: mypy
+        args: ["--config-file", "pyproject.toml"]
         additional_dependencies: ["numpy"]

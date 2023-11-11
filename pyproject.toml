@@ -21,6 +21,29 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 88
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
 
 [tool.ruff.format]
 quote-style = "double"
@@ -36,4 +59,3 @@ allow_untyped_defs = true
 allow_subclassing_any = true
 allow_untyped_calls = true
 strict_optional = true
-
