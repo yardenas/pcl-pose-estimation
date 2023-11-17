@@ -21,7 +21,7 @@ class Encoder(eqx.Module):
 
     def __init__(
         self,
-        kernels: list[tuple[int, int, int]],
+        kernels: list[int],
         depth: int,
         in_channels: int,
     ):
@@ -57,11 +57,13 @@ class Model(eqx.Module):
     norm: eqx.nn.LayerNorm
     encoder: Encoder
     decoder: Decoder
+    out: eqx.nn.Linear
 
     def __init__(
         self,
         input_dim: int,
-        kernels: list[tuple[int, int, int]],
+        output_dim: int,
+        kernels: list[int],
         depth: int,
         in_channels: int,
         linear_layers: list[int],
@@ -75,9 +77,11 @@ class Model(eqx.Module):
         dummy_y = self.encoder(dummy_x)
         input_dim = np.prod(dummy_y.shape)
         self.decoder = Decoder(linear_layers, input_dim)
+        self.out = eqx.nn.Linear(self.decoder.layers[-1].out_features, output_dim)
 
     def __call__(self, x: jax.Array) -> jax.Array:
         x = self.norm(x)
         x = self.encoder(x)
         x = self.decoder(x)
+        x = self.out(x)
         return x
