@@ -27,3 +27,7 @@ def get_data(path: str, train_split: float = 1.0):
     split = int(x.shape[0] * train_split)
     (x_train, x_test), (y_train, y_test) = map(lambda x: (x[:split], x[split:]), (x, y))
     return (x_train, y_train), (x_test, y_test)
+
+
+def normalize():
+    pass
