@@ -51,4 +51,4 @@ def test_model():
     )
     count_params(model)
     y = model(x[0])
-    assert y.shape == (1, OUT_SIZE)
+    assert y.shape == (OUT_SIZE,)
