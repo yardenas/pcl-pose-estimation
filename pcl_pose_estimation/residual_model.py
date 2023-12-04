@@ -105,12 +105,13 @@ class Model(eqx.Module):
             in_channels, base_channels, (5, 5, 2), dilation=(2, 2, 2), key=keys[0]
         )
         self.max_pool = eqx.nn.MaxPool3d(kernel_size=3, stride=2, padding=1)
-        for i, key in enumerate(key[:-1]):
+        self.layers = []
+        for i, key in enumerate(keys[:-1]):
             in_channels = base_channels * 2**i
             out_channels = in_channels * 2
             self.layers.append(_make_layer(in_channels, out_channels, 1, 2, key=key))
         self.avg_pool = eqx.nn.AdaptiveAvgPool3d(1)
-        self.outs = eqx.nn.Linear(base_channels * 2**i, out_dim, key=keys[4])
+        self.outs = eqx.nn.Linear(base_channels * 2 ** (i + 1), out_dim, key=keys[4])
 
     def __call__(self, x: jax.Array) -> jax.Array:
         x = self.layer0(x)
