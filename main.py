@@ -15,7 +15,7 @@ def main(config: DictConfig):
         config.data.path, config.training.batch_size, config.data.train_split
     )
     example_x, example_y = next(iter(train_data))
-    train_data = train_data.shuffle(1000, seed=0).repeat(config.training.epochs)
+    train_data = train_data.repeat(config.training.epochs)
     assert example_x.ndim == 5
     output_dim = example_y.shape[-1]
     in_channels = example_x.shape[1]

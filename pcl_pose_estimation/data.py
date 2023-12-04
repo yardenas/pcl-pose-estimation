@@ -47,6 +47,7 @@ def make_dataset(
                 output_shapes=output_shape,
             )
             .rebatch(batch_size)
+            .shuffle(100, seed=0)
             .map(one_hot, num_parallel_calls=tfd.AUTOTUNE)
             .prefetch(tfd.AUTOTUNE)
         )
