@@ -31,3 +31,7 @@ def get_data(path: str, train_split: float = 1.0):
 
 def normalize():
     pass
+
+
+def _make_dataset(data_path: str):
+    pass
