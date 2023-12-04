@@ -1,31 +1,33 @@
 import hydra
 import optax
+import jax
 from omegaconf import DictConfig
 
-from pcl_pose_estimation.data import get_data
-from pcl_pose_estimation.model import Model
+from pcl_pose_estimation.data import make_dataset
+from pcl_pose_estimation.residual_model import Model
 from pcl_pose_estimation.training import evaluate, train_model
+from pcl_pose_estimation.utils import count_params
 
 
 @hydra.main(config_name="config")
 def main(config: DictConfig):
-    train_data, test_data = get_data(config.data.path)
-    example_x, example_y = train_data[0]
-    assert example_x.ndim == 5
-    input_dim = example_x.shape[1]
-    output_dim = example_y.shape[-1]
-    in_channels = example_x.shape[-1]
-    model = Model(
-        input_dim,
-        output_dim,
-        config.model.kernels,
-        config.model.depth,
-        in_channels,
-        config.model.linear_layers,
+    train_data, val_data = make_dataset(
+        config.data.path, config.training.batch_size, config.data.train_split
     )
+    example_x, example_y = next(iter(train_data))
+    train_data = train_data.shuffle(1000, seed=0).repeat(config.training.epochs)
+    assert example_x.ndim == 5
+    output_dim = example_y.shape[-1]
+    in_channels = example_x.shape[1]
+    model = Model(
+        in_channels,
+        output_dim,
+        key=jax.random.PRNGKey(0),
+    )
+    count_params(model)
     opt = optax.adam(config.training.learning_rate)
-    model = train_model(model, opt, config.training.epochs, train_data)
-    result = evaluate(model, test_data)
+    model = train_model(model, opt, train_data)
+    result = evaluate(model, val_data)
     print(f"Evaluation result: {result}")
 
 

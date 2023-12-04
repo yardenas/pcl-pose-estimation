@@ -1,3 +1,4 @@
+from typing import Sequence
 import equinox as eqx
 import jax
 import jax.nn as jnn
@@ -75,7 +76,7 @@ class Model(eqx.Module):
 
     def __init__(
         self,
-        input_dim: int,
+        input_shape: Sequence[int],
         output_dim: int,
         kernels: list[int],
         depth: int,
@@ -88,9 +89,7 @@ class Model(eqx.Module):
         self.norm = eqx.nn.LayerNorm(in_channels)
         encoder_key, decoder_key, out_key = jax.random.split(key, 3)
         self.encoder = Encoder(kernels, depth, in_channels, key=encoder_key)
-        dummy_x = jax.random.normal(
-            jax.random.PRNGKey(0), (input_dim, input_dim, input_dim, in_channels)
-        )
+        dummy_x = jax.random.normal(jax.random.PRNGKey(0), (in_channels, *input_shape))
         dummy_y = self.encoder(dummy_x)
         input_dim = np.prod(dummy_y.shape)
         self.decoder = Decoder(linear_layers, input_dim, key=decoder_key)
