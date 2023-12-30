@@ -36,7 +36,7 @@ class ResnetBlock(eqx.Module):
         subsample: bool,
         dilation: int = 1,
         *,
-        key: jrandom.KeyArray,
+        key: jax.Array,
     ):
         keys = jrandom.split(key, 3)
         self.conv1 = _conv3x3(
@@ -53,9 +53,7 @@ class ResnetBlock(eqx.Module):
             else None
         )
 
-    def __call__(
-        self, x: jax.Array, *, key: jrandom.KeyArray | None = None
-    ) -> jax.Array:
+    def __call__(self, x: jax.Array, *, key: jax.Array | None = None) -> jax.Array:
         out = jnn.gelu(x)
         out = self.conv1(out)
         out = jnn.gelu(out)
@@ -72,7 +70,7 @@ def _make_layer(
     num_blocks: int,
     dilation: int,
     *,
-    key: jrandom.KeyArray,
+    key: jax.Array,
 ) -> eqx.nn.Sequential:
     keys = jrandom.split(key, num_blocks)
     layers = [ResnetBlock(in_channels, out_channels, True, dilation, key=keys[0])] + [
@@ -96,7 +94,7 @@ class Model(eqx.Module):
     outs: eqx.nn.Linear
 
     def __init__(
-        self, in_channels: int, out_dim: int, layers: int = 4, *, key: jrandom.KeyArray
+        self, in_channels: int, out_dim: int, layers: int = 4, *, key: jax.Array
     ):
         keys = jrandom.split(key, layers + 1)
         # TODO (yarden): figure out with Yunke the initial kernel size and their corresponding dimensions
