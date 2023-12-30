@@ -9,7 +9,7 @@ from pcl_pose_estimation.training import evaluate, train_model
 from pcl_pose_estimation.utils import count_params
 
 
-@hydra.main(config_name="config")
+@hydra.main(config_name="config", config_path=".", version_base=None)
 def main(config: DictConfig):
     train_data, val_data = make_dataset(
         config.data.path, config.training.batch_size, config.data.train_split

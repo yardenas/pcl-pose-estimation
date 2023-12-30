@@ -25,6 +25,17 @@ def make_dataset(
         labels_data = np.load(f"{data_path}/{labels}")
         return obs_data["arr_0"], labels_data["arr_0"]
 
+    def stats(indices):
+        all_labels = []
+        for idx in indices:
+            _, labels = obs_and_labels(idx)
+            all_labels.append(labels)
+        all_labels = np.concatenate(all_labels)
+        return all_labels.mean(axis=0), all_labels.std(axis=0)
+
+    def normalize(x, mean, std):
+        return (x - mean) / (std + 1e-8)
+
     def datagen(indices):
         for idx in indices:
             yield obs_and_labels(idx)
@@ -33,10 +44,12 @@ def make_dataset(
     example = obs_and_labels(0)
     output_shape = tuple(map(lambda x: x.shape, example))
     num_object_types = example[0].max()
+    mean, std = stats(train)
 
-    def one_hot(obs, labels):
+    def process(obs, labels):
         obs = tf.one_hot(obs, num_object_types, axis=1)
         obs = tf.squeeze(obs, axis=2)
+        labels = normalize(labels, mean, std)
         return obs, labels
 
     def dataset(indices):
@@ -48,7 +61,7 @@ def make_dataset(
             )
             .rebatch(batch_size)
             .shuffle(100, seed=0)
-            .map(one_hot, num_parallel_calls=tfd.AUTOTUNE)
+            .map(process, num_parallel_calls=tfd.AUTOTUNE)
             .prefetch(tfd.AUTOTUNE)
         )
 
