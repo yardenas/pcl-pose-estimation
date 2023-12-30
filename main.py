@@ -22,6 +22,7 @@ def main(config: DictConfig):
     model = Model(
         in_channels,
         output_dim,
+        config.model.layers,
         key=jax.random.PRNGKey(0),
     )
     count_params(model)

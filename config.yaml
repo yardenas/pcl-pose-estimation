@@ -6,6 +6,7 @@ model:
   kernels: [4, 4, 4]
   depth: 32
   linear_layers: [128, 128]
+  layers: 4
 data:
   path: ${hydra:runtime.cwd}/data
   train_split: 0.8
