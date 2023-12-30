@@ -30,7 +30,7 @@ def train_model(
     model: Model,
     opt: optax.GradientTransformation,
     data_generator: tfd.Dataset,
-):
+) -> Model:
     opt_state = opt.init(eqx.filter(model, eqx.is_array))
     for step, (x, y) in enumerate(data_generator.as_numpy_iterator()):
         loss, model, opt_state = update_step(model, x, y, opt, opt_state)

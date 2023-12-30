@@ -43,7 +43,7 @@ def make_dataset(
     train, val = collect_file_ids(data_path, split)
     example = obs_and_labels(0)
     output_shape = tuple(map(lambda x: x.shape, example))
-    num_object_types = example[0].max()
+    num_object_types = example[0].max() + 1
     mean, std = stats(train)
 
     def process(obs, labels):

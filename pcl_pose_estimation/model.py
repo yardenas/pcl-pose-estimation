@@ -1,8 +1,6 @@
-from typing import Sequence
 import equinox as eqx
 import jax
 import jax.nn as jnn
-import numpy as np
 
 
 class ConvBlock(eqx.Module):
@@ -14,92 +12,58 @@ class ConvBlock(eqx.Module):
         out_channels: int,
         kernel: int,
         *,
-        key: jax.random.PRNGKey,
+        key: jax.Array,
     ):
         self.conv = eqx.nn.Conv3d(in_channels, out_channels, kernel, stride=2, key=key)
 
     def __call__(self, x: jax.Array) -> jax.Array:
-        return self.conv(x.transpose((3, 0, 1, 2))).transpose((1, 2, 3, 0))
+        return self.conv(x)
 
 
 class Encoder(eqx.Module):
     layers: list[ConvBlock]
+    avg_pool: eqx.nn.AdaptiveAvgPool3d
 
     def __init__(
         self,
-        kernels: list[int],
+        num_layers: int,
         depth: int,
         in_channels: int,
         *,
-        key: jax.random.PRNGKey,
+        key: jax.Array,
     ):
         self.layers = []
         key, subkey = jax.random.split(key)
-        for i, kernel in enumerate(kernels):
+        for i in range(num_layers):
             out_channels = 2**i * depth
-            self.layers.append(ConvBlock(in_channels, out_channels, kernel, key=subkey))
+            self.layers.append(ConvBlock(in_channels, out_channels, 3, key=subkey))
             in_channels = out_channels
+        self.avg_pool = eqx.nn.AdaptiveAvgPool3d(1)
 
     def __call__(self, x: jax.Array) -> jax.Array:
         for layer in self.layers:
             x = jnn.gelu(layer(x))
-        return x
-
-
-class Decoder(eqx.Module):
-    layers: list[eqx.nn.Linear]
-
-    def __init__(
-        self,
-        layers: list[int],
-        input_dim: int,
-        *,
-        key: jax.random.PRNGKey,
-    ):
-        self.layers = []
-        key, subkey = jax.random.split(key)
-        for linear_layer in layers:
-            self.layers.append(eqx.nn.Linear(input_dim, linear_layer, key=subkey))
-            input_dim = linear_layer
-
-    def __call__(self, x: jax.Array) -> jax.Array:
-        for layer in self.layers:
-            x = jnn.gelu(layer(x))
+        x = self.avg_pool(x).ravel()
         return x
 
 
 class Model(eqx.Module):
-    norm: eqx.nn.LayerNorm
     encoder: Encoder
-    decoder: Decoder
     out: eqx.nn.Linear
 
     def __init__(
-        self,
-        input_shape: Sequence[int],
-        output_dim: int,
-        kernels: list[int],
-        depth: int,
-        in_channels: int,
-        linear_layers: list[int],
-        *,
-        key: jax.random.PRNGKey,
+        self, in_channels: int, out_dim: int, layers: int = 4, *, key: jax.Array
     ):
         super().__init__()
-        self.norm = eqx.nn.LayerNorm(in_channels)
-        encoder_key, decoder_key, out_key = jax.random.split(key, 3)
-        self.encoder = Encoder(kernels, depth, in_channels, key=encoder_key)
-        dummy_x = jax.random.normal(jax.random.PRNGKey(0), (in_channels, *input_shape))
-        dummy_y = self.encoder(dummy_x)
-        input_dim = np.prod(dummy_y.shape)
-        self.decoder = Decoder(linear_layers, input_dim, key=decoder_key)
+        assert layers > 0
+        encoder_key, out_key = jax.random.split(key)
+        base_channels = 32
+        self.encoder = Encoder(layers, base_channels, in_channels, key=encoder_key)
         self.out = eqx.nn.Linear(
-            self.decoder.layers[-1].out_features, output_dim, key=out_key
+            base_channels * 2 ** (layers - 1), out_dim, key=out_key
         )
 
     def __call__(self, x: jax.Array) -> jax.Array:
-        x = self.norm(x)
         x = self.encoder(x)
-        x = self.decoder(x)
         x = self.out(x)
         return x

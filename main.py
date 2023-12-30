@@ -4,7 +4,7 @@ import jax
 from omegaconf import DictConfig
 
 from pcl_pose_estimation.data import make_dataset
-from pcl_pose_estimation.residual_model import Model
+from pcl_pose_estimation.model import Model
 from pcl_pose_estimation.training import evaluate, train_model
 from pcl_pose_estimation.utils import count_params
 
