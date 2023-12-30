@@ -35,7 +35,7 @@ def train_model(
     for step, (x, y) in enumerate(data_generator.as_numpy_iterator()):
         loss, model, opt_state = update_step(model, x, y, opt, opt_state)
         if step % 100 == 0:
-            print(f"step={step}, loss={loss}")
+            print(f"step {step}: loss={loss:.4f}")
     return model
 
 
