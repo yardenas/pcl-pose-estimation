@@ -34,6 +34,8 @@ def train_model(
     opt_state = opt.init(eqx.filter(model, eqx.is_array))
     for step, (x, y) in enumerate(data_generator.as_numpy_iterator()):
         loss, model, opt_state = update_step(model, x, y, opt, opt_state)
+        if np.abs(y).sum(axis=1).mean() > 10:
+            print(y, "x, y")
         if step % 100 == 0:
             print(f"step {step}: loss={loss:.4f}")
     return model

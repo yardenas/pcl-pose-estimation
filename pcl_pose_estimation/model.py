@@ -42,13 +42,14 @@ class Encoder(eqx.Module):
 
     def __call__(self, x: jax.Array) -> jax.Array:
         for layer in self.layers:
-            x = jnn.gelu(layer(x))
+            x = jnn.elu(layer(x))
         x = self.avg_pool(x).ravel()
         return x
 
 
 class Model(eqx.Module):
     encoder: Encoder
+    out0: eqx.nn.Linear
     out: eqx.nn.Linear
 
     def __init__(
@@ -56,14 +57,15 @@ class Model(eqx.Module):
     ):
         super().__init__()
         assert layers > 0
-        encoder_key, out_key = jax.random.split(key)
+        encoder_key, out0_key, out_key = jax.random.split(key, 3)
         base_channels = 32
         self.encoder = Encoder(layers, base_channels, in_channels, key=encoder_key)
-        self.out = eqx.nn.Linear(
-            base_channels * 2 ** (layers - 1), out_dim, key=out_key
-        )
+        out_layers = base_channels * 2 ** (layers - 1)
+        self.out = eqx.nn.Linear(out_layers, out_layers, key=out_key)
+        self.out0 = eqx.nn.Linear(out_layers, out_dim, key=out0_key)
 
     def __call__(self, x: jax.Array) -> jax.Array:
         x = self.encoder(x)
-        x = self.out(x)
+        x = jnn.elu(self.out(x))
+        x = self.out0(x)
         return x

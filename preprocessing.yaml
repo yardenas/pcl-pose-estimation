@@ -1,0 +1,4 @@
+path: ${hydra:runtime.cwd}/data
+seed: 0
+out_path: ${hydra:runtime.cwd}/data/processed
+  
