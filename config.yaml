@@ -8,5 +8,5 @@ model:
   linear_layers: [128, 128]
   layers: 1
 data:
-  path: ${hydra:runtime.cwd}/data
+  path: ${hydra:runtime.cwd}/data/processed.npz
   train_split: 0.8

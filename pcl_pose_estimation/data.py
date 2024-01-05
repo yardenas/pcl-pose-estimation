@@ -32,17 +32,26 @@ def make_dataset(
         labels = normalize(labels, mean, std)
         return obs, labels
 
-    def dataset():
+    def dataset(obs, labels):
         return (
             tfd.Dataset.from_tensor_slices((obs, labels))
-            .batch(batch_size)
             .shuffle(1000, seed=0)
+            .batch(batch_size)
             .map(process, num_parallel_calls=tfd.AUTOTUNE)
             .prefetch(tfd.AUTOTUNE)
         )
 
-    train_dataset = dataset()
-    if False:
-        return train_dataset
+    def split_data():
+        idx = int(len(obs) * split)
+        train_obs, train_labels = obs[:idx], labels[:idx]
+        val_obs, val_labels = obs[:idx], labels[:idx]
+        return (train_obs, train_labels), (val_obs, val_labels)
+
+    if split < 1.0:
+        train_data, val_data = split_data()
+        train_dataset = dataset(*train_data)
+        val_dateset = dataset(*val_data)
+        return train_dataset, val_dateset
     else:
+        train_dataset = dataset(obs, labels)
         return train_dataset

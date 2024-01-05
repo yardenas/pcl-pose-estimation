@@ -38,9 +38,10 @@ def load_data(data_path: str) -> tuple[npt.NDArray[Any], npt.NDArray[Any]]:
         obs, labels = obs_and_labels(data_path, id)
         all_obs.append(obs)
         all_labels.append(labels)
-    all_obs = np.concatenate(all_obs)
-    all_labels = np.concatenate(all_labels)
-    return obs, labels
+    all_obs_out = np.concatenate(all_obs)
+    all_labels_out = np.concatenate(all_labels)
+    print(f"Loaded {len(all_obs)} data points")
+    return all_obs_out, all_labels_out
 
 
 def clean_duplicates(
