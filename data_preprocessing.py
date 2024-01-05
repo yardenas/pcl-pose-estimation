@@ -27,7 +27,7 @@ def obs_and_labels(data_path, idx):
     labels = f"label_data_{idx}.npz"
     obs_data = np.load(f"{data_path}/{obs}")
     labels_data = np.load(f"{data_path}/{labels}")
-    return obs_data["arr_0"], labels_data["arr_0"][..., :3]
+    return obs_data["arr_0"], labels_data["arr_0"]
 
 
 def load_data(data_path: str) -> tuple[npt.NDArray[Any], npt.NDArray[Any]]:
