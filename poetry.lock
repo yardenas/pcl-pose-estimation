@@ -221,6 +221,17 @@ files = [
 ]
 
 [[package]]
+name = "einops"
+version = "0.7.0"
+description = "A new flavour of deep learning operations"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "einops-0.7.0-py3-none-any.whl", hash = "sha256:0f3096f26b914f465f6ff3c66f5478f9a5e380bb367ffc6493a68143fbbf1fd1"},
+    {file = "einops-0.7.0.tar.gz", hash = "sha256:b2b04ad6081a3b227080c9bf5e3ace7160357ff03043cd66cc5b2319eb7031d1"},
+]
+
+[[package]]
 name = "equinox"
 version = "0.11.1"
 description = "Elegant easy-to-use neural networks in JAX."
@@ -1692,4 +1703,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10,<3.12"
-content-hash = "b3fafbde6f73d838eaa12a3e7f22c90c376173bf2ef41fef50d88f56446c3166"
+content-hash = "00e4c66f1e86daea2fee01da2b70e96cbded0e0b72f48ad193ae1f368a94d39b"
