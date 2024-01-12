@@ -4,7 +4,7 @@ import jax
 from omegaconf import DictConfig
 
 from pcl_pose_estimation.data import make_dataset
-from pcl_pose_estimation.model import Model
+from pcl_pose_estimation.voxnet_model import VoxNet
 from pcl_pose_estimation.training import evaluate, train_model
 from pcl_pose_estimation.utils import count_params
 
@@ -19,10 +19,9 @@ def main(config: DictConfig) -> None:
     assert example_x.ndim == 5
     output_dim = example_y.shape[-1]
     in_channels = example_x.shape[1]
-    model = Model(
+    model = VoxNet(
         in_channels,
         output_dim,
-        config.model.layers,
         key=jax.random.PRNGKey(0),
     )
     count_params(model)
