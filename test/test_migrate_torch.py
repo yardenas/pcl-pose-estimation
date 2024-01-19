@@ -3,7 +3,6 @@ import pytest
 import jax
 import jax.numpy as jnp
 import torch
-from equinox import random
 
 from pcl_pose_estimation.voxnet_model import VoxNet
 from pcl_pose_estimation.torch_migration import (
@@ -29,8 +28,8 @@ def jax_dump_model():
 
 @pytest.fixture
 def random_inputs():
-    key = random.PRNGKey(1)
-    inputs = random.normal(key, (BATCH_SIZE, OUTPUT_DIMS))
+    key = jax.random.PRNGKey(1)
+    inputs = jax.random.normal(key, (BATCH_SIZE, OUTPUT_DIMS))
     return inputs
 
 
