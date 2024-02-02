@@ -54,5 +54,5 @@ def evaluate(
 ):
     eval_data = [(x, y) for x, y in epoch_generator.as_numpy_iterator()]
     x, y = map(np.stack, zip(*eval_data))
-    y_hat = jax.vmap(model, x)
+    y_hat = jax.vmap(model)(x)
     return metric_fn(y_hat, y).mean()
