@@ -28,11 +28,7 @@ def test_model():
     x, y = data["x"], data["y"]
     in_channels = x.shape[1]
     output_dim = y.shape[-1]
-    model = VoxNet(
-        in_channels,
-        output_dim,
-        key=jax.random.PRNGKey(0),
-    )
+    model = VoxNet(in_channels, output_dim, key=jax.random.PRNGKey(0))
     count_params(model)
     y = model(x[0])
     assert y.shape == (OUT_SIZE,)

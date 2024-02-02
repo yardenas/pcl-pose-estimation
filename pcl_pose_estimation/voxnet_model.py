@@ -37,8 +37,8 @@ class VoxNet(eqx.Module):
             stride=(2, 2, 1),
             key=conv3_key,
         )
-        self.max_pool = eqx.nn.MaxPool3d(4, 1)
-        self.linear1 = eqx.nn.Linear(6 * 6 * 9 * 64, 128, key=linear1_key)
+        self.max_pool = eqx.nn.MaxPool3d((4, 4, 2), 1)
+        self.linear1 = eqx.nn.Linear(7 * 7 * 3 * 64, 128, key=linear1_key)
         self.linear2 = eqx.nn.Linear(128, output_dim, key=linear2_key)
 
     def __call__(self, x: jax.Array) -> jax.Array:
