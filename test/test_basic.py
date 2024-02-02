@@ -2,7 +2,7 @@ import jax
 import numpy as np
 import pytest
 
-from pcl_pose_estimation.residual_model import Model
+from pcl_pose_estimation.voxnet_model import VoxNet
 from pcl_pose_estimation.utils import count_params
 
 DATA_SIZE = 32
@@ -28,7 +28,7 @@ def test_model():
     x, y = data["x"], data["y"]
     in_channels = x.shape[1]
     output_dim = y.shape[-1]
-    model = Model(
+    model = VoxNet(
         in_channels,
         output_dim,
         key=jax.random.PRNGKey(0),
