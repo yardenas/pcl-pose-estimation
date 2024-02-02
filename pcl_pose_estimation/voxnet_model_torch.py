@@ -18,6 +18,6 @@ class PyTorchVoxNet(nn.Module):
         x = torch.nn.functional.gelu(self.conv3(x))
         x = self.max_pool(x)
         x = x.view(x.size(0), -1)
-        x = torch.nn.gelu(self.linear1(x))
+        x = torch.nn.functional.gelu(self.linear1(x))
         x = self.linear2(x)
         return x
