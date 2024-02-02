@@ -53,6 +53,6 @@ def evaluate(
     metric_fn: Callable[[jax.Array, jax.Array], jax.Array] = optax.l2_loss,
 ):
     eval_data = [(x, y) for x, y in epoch_generator.as_numpy_iterator()]
-    x, y = jax.tree_map(np.stack, zip(*eval_data))
+    x, y = map(np.stack, zip(*eval_data))
     y_hat = jax.vmap(model, x)
     return metric_fn(y_hat, y).mean()
