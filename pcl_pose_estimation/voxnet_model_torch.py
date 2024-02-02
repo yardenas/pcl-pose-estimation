@@ -8,7 +8,7 @@ class PyTorchVoxNet(nn.Module):
         self.conv1 = nn.Conv3d(input_channels, 32, kernel_size=(8, 8, 4), stride=2)
         self.conv2 = nn.Conv3d(32, 64, kernel_size=(4, 4, 2), stride=2)
         self.conv3 = nn.Conv3d(64, 64, kernel_size=(3, 3, 1), stride=(2, 2, 1))
-        self.max_pool = nn.MaxPool3d((3, 3, 1), 1)
+        self.max_pool = nn.MaxPool3d((4, 4, 2), 1)
         self.linear1 = nn.Linear(7 * 7 * 3 * 64, 128)
         self.linear2 = nn.Linear(128, output_dim)
 

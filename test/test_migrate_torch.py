@@ -30,7 +30,7 @@ def jax_dump_model():
 @pytest.fixture
 def random_inputs():
     key = jax.random.PRNGKey(1)
-    inputs = jax.random.normal(key, (BATCH_SIZE, INPUT_CHANNELS, 90, 90, 50))
+    inputs = jax.random.normal(key, (BATCH_SIZE, INPUT_CHANNELS, 100, 100, 20))
     return inputs
 
 

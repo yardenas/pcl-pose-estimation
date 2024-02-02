@@ -7,7 +7,7 @@ class VoxNet(eqx.Module):
     conv1: eqx.nn.Conv3d
     conv2: eqx.nn.Conv3d
     conv3: eqx.nn.Conv3d
-    max_pool: eqx.nn.AdaptiveMaxPool3d
+    max_pool: eqx.nn.MaxPool3d
     linear1: eqx.nn.Linear
     linear2: eqx.nn.Linear
 
