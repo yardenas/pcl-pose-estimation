@@ -2,11 +2,6 @@ training:
   epochs: 10
   batch_size: 32
   learning_rate: 0.001
-model:
-  kernels: [4, 4, 4]
-  depth: 32
-  linear_layers: [128, 128]
-  layers: 1
 data:
   path: ${hydra:runtime.cwd}/data/processed.npz
   train_split: 0.8

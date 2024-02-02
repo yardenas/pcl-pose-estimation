@@ -4,12 +4,12 @@ import jax
 import optax
 import numpy as np
 from tensorflow import data as tfd
-from pcl_pose_estimation.model import Model
+from pcl_pose_estimation.voxnet_model import VoxNet
 
 
 @eqx.filter_value_and_grad
 def compute_loss(
-    model: Model,
+    model: VoxNet,
     x: jax.Array,
     y: jax.Array,
     loss_fn: Callable[[jax.Array, jax.Array], jax.Array],
@@ -20,7 +20,7 @@ def compute_loss(
 
 @eqx.filter_jit
 def update_step(
-    model: Model,
+    model: VoxNet,
     x: jax.Array,
     y: jax.Array,
     opt: optax.GradientTransformation,
@@ -34,11 +34,11 @@ def update_step(
 
 
 def train_model(
-    model: Model,
+    model: VoxNet,
     opt: optax.GradientTransformation,
     data_generator: tfd.Dataset,
     loss_fn: Callable[[jax.Array, jax.Array], jax.Array] = optax.l2_loss,
-) -> Model:
+) -> VoxNet:
     opt_state = opt.init(eqx.filter(model, eqx.is_array))
     for step, (x, y) in enumerate(data_generator.as_numpy_iterator()):
         loss, model, opt_state = update_step(model, x, y, opt, opt_state, loss_fn)
@@ -48,7 +48,7 @@ def train_model(
 
 
 def evaluate(
-    model: Model,
+    model: VoxNet,
     epoch_generator: tfd.Dataset,
     metric_fn: Callable[[jax.Array, jax.Array], jax.Array] = optax.l2_loss,
 ):
