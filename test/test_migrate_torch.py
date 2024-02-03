@@ -33,7 +33,7 @@ def random_inputs():
 
 @pytest.fixture
 def jax_load_model(jax_dump_model):
-    model = load_voxnet(DUMP_MODEL)
+    model, _ = load_voxnet(DUMP_MODEL)
     return model
 
 

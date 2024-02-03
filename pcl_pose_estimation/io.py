@@ -15,8 +15,8 @@ def dump_voxnet(model: VoxNet, path: str, input_channels: int, output_dim: int) 
         eqx.tree_serialise_leaves(f, model)
 
 
-def load_voxnet(path: str) -> VoxNet:
+def load_voxnet(path: str) -> tuple[VoxNet, dict[str, int]]:
     with open(path, "rb") as f:
         parameters = json.loads(f.readline().decode())
         model = VoxNet(**parameters, key=jax.random.PRNGKey(0))
-        return eqx.tree_deserialise_leaves(f, model)
+        return eqx.tree_deserialise_leaves(f, model), parameters
