@@ -1,14 +1,14 @@
-import hydra
-import optax
-import jax
 import equinox as eqx
+import hydra
+import jax
+import optax
 from omegaconf import DictConfig
 
 from pcl_pose_estimation.data import make_dataset
-from pcl_pose_estimation.torch_migration import dump_voxnet
-from pcl_pose_estimation.voxnet_model import VoxNet
+from pcl_pose_estimation.io import dump_voxnet
 from pcl_pose_estimation.training import evaluate, train_model
 from pcl_pose_estimation.utils import count_params
+from pcl_pose_estimation.voxnet_model import VoxNet
 
 
 @hydra.main(config_name="config", config_path=".", version_base=None)

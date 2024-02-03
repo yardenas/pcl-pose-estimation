@@ -6,11 +6,8 @@ import numpy as np
 import torch
 
 from pcl_pose_estimation.voxnet_model import VoxNet
-from pcl_pose_estimation.torch_migration import (
-    dump_voxnet,
-    load_voxnet,
-    convert_to_torch,
-)
+from pcl_pose_estimation.torch_migration import convert_to_torch
+from pcl_pose_estimation.io import dump_voxnet, load_voxnet
 
 INPUT_CHANNELS = 1
 OUTPUT_DIMS = 6
