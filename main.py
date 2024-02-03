@@ -5,6 +5,7 @@ import equinox as eqx
 from omegaconf import DictConfig
 
 from pcl_pose_estimation.data import make_dataset
+from pcl_pose_estimation.torch_migration import dump_voxnet
 from pcl_pose_estimation.voxnet_model import VoxNet
 from pcl_pose_estimation.training import evaluate, train_model
 from pcl_pose_estimation.utils import count_params
@@ -27,6 +28,7 @@ def main(config: DictConfig) -> None:
         model, opt_state = train_model(model, opt, opt_state, train_data)
         result = evaluate(model, val_data)
         print(f"Evaluation result: {result}")
+        dump_voxnet(model, config.training.checkpoint_path, in_channels, output_dim)
 
 
 if __name__ == "__main__":

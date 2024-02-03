@@ -2,6 +2,7 @@ training:
   epochs: 10
   batch_size: 32
   learning_rate: 0.001
+  checkpoint_path: ${hydra:runtime.cwd}/checkpoints
 data:
   path: ${hydra:runtime.cwd}/data/processed.npz
   train_split: 0.8
