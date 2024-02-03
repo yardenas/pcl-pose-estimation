@@ -19,11 +19,7 @@ def main(config: DictConfig) -> None:
     assert example_x.ndim == 5
     output_dim = example_y.shape[-1]
     in_channels = example_x.shape[1]
-    model = VoxNet(
-        in_channels,
-        output_dim,
-        key=jax.random.PRNGKey(0),
-    )
+    model = VoxNet(in_channels, output_dim, key=jax.random.PRNGKey(0))
     count_params(model)
     opt = optax.adam(config.training.learning_rate)
     opt_state = opt.init(eqx.filter(model, eqx.is_array))
