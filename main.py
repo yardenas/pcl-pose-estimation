@@ -1,9 +1,9 @@
 import equinox as eqx
-import hydra
 import jax
 import optax
 from omegaconf import DictConfig
 
+import hydra
 from pcl_pose_estimation.data import make_dataset
 from pcl_pose_estimation.io import dump_voxnet
 from pcl_pose_estimation.training import evaluate, train_model
@@ -31,7 +31,12 @@ def main(config: DictConfig) -> None:
         model, opt_state = train_model(model, opt, opt_state, train_data)
         result = evaluate(model, val_data)
         print(f"Evaluation result: {result}")
-        dump_voxnet(model, f"{config.training.checkpoint_path}_{i}.ckpt", in_channels, output_dim)
+        dump_voxnet(
+            model,
+            f"{config.training.checkpoint_path}/{i}.ckpt",
+            in_channels,
+            output_dim,
+        )
 
 
 if __name__ == "__main__":

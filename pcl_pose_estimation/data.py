@@ -25,6 +25,7 @@ def make_dataset(
     obs, labels = load_data(data_path)
     num_object_types = obs.max() + 1
     mean, std = stats(labels)
+    print("Stats:", mean, std)
 
     def process(obs, labels):
         obs = tf.one_hot(obs, num_object_types, axis=1)

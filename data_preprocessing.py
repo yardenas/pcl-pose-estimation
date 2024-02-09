@@ -40,7 +40,7 @@ def load_data(data_path: str) -> tuple[npt.NDArray[Any], npt.NDArray[Any]]:
         all_labels.append(labels)
     all_obs_out = np.concatenate(all_obs)
     all_labels_out = np.concatenate(all_labels)
-    print(f"Loaded {len(all_obs)} data points")
+    print(f"Loaded {len(all_labels_out)} data points")
     return all_obs_out, all_labels_out
 
 

@@ -1,4 +1,5 @@
 import json
+import os
 
 import equinox as eqx
 import jax
@@ -8,6 +9,7 @@ from pcl_pose_estimation.voxnet_model import VoxNet
 
 # https://docs.kidger.site/equinox/examples/serialisation/
 def dump_voxnet(model: VoxNet, path: str, input_channels: int, output_dim: int) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "wb") as f:
         parameters = dict(input_channels=input_channels, output_dim=output_dim)
         serialized_config = json.dumps(parameters)
