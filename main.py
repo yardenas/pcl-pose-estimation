@@ -27,11 +27,11 @@ def main(config: DictConfig) -> None:
     count_params(model)
     opt = optax.adam(config.training.learning_rate)
     opt_state = opt.init(eqx.filter(model, eqx.is_array))
-    for _ in range(config.training.epochs):
+    for i in range(config.training.epochs):
         model, opt_state = train_model(model, opt, opt_state, train_data)
         result = evaluate(model, val_data)
         print(f"Evaluation result: {result}")
-        dump_voxnet(model, config.training.checkpoint_path, in_channels, output_dim)
+        dump_voxnet(model, f"{config.training.checkpoint_path}_{i}.ckpt", in_channels, output_dim)
 
 
 if __name__ == "__main__":
