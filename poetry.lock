@@ -618,6 +618,23 @@ type = "url"
 url = "https://storage.googleapis.com/jax-releases/cuda11/jaxlib-0.4.23+cuda11.cudnn86-cp310-cp310-manylinux2014_x86_64.whl"
 
 [[package]]
+name = "jaxopt"
+version = "0.8.3"
+description = "Hardware accelerated, batchable and differentiable optimizers in JAX."
+optional = false
+python-versions = "*"
+files = [
+    {file = "jaxopt-0.8.3-py3-none-any.whl", hash = "sha256:4be2f82798393682529c9ca5046e5397ac6c8657b8acb6bf275e773b28df15b6"},
+    {file = "jaxopt-0.8.3.tar.gz", hash = "sha256:4b06dfa6f915a4f3291699606245af6069371a48dc5c92d4c507840d62990646"},
+]
+
+[package.dependencies]
+jax = ">=0.2.18"
+jaxlib = ">=0.1.69"
+numpy = ">=1.18.4"
+scipy = ">=1.0.0"
+
+[[package]]
 name = "jaxtyping"
 version = "0.2.23"
 description = "Type annotations and runtime checking for shape and dtype of JAX arrays, and PyTrees."
@@ -2023,4 +2040,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10,<3.12"
-content-hash = "ed326ab19b9ef7bee0765cc39bc5ac7f6827b441da655ff6ed4aaf7e8171f392"
+content-hash = "91d4423e52b602c49f42676285a3d34fb418367a91aa3b2b560db82102d08972"
