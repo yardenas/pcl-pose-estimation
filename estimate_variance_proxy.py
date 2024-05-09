@@ -2,13 +2,17 @@ import jax
 import jax.nn as jnn
 import jax.numpy as jnp
 import jaxopt
-
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+from jaxopt._src.lbfgs import LbfgsState
 from scipy import stats
 
+jax.config.update("jax_enable_x64", True)
 
-def estimate_variance_proxy(sample: jax.Array, initial_guess: jax.Array) -> float:
+
+def estimate_variance_proxy(
+    sample: jax.Array, initial_guess: jax.Array, tol: float = 0.001
+) -> tuple[float, LbfgsState]:
     """Estimates the variance proxy of a sub-Gaussian distribution
 
     Args:
@@ -28,18 +32,22 @@ def estimate_variance_proxy(sample: jax.Array, initial_guess: jax.Array) -> floa
 
     def f(lambda_):
         return (
-            2.0 * jnn.logsumexp(jnp.tensordot(debiased_sample, lambda_, axes=1))
-            - jnp.log(sample.shape[0])
-        ) / (lambda_.dot(lambda_))
+            -2.0
+            * (
+                jnn.logsumexp(jnp.tensordot(debiased_sample, lambda_, axes=1))
+                - jnp.log(sample.shape[0])
+            )
+            / (lambda_.dot(lambda_))
+        )
 
-    solver = jaxopt.LBFGS(fun=f)
-    result = solver.run(initial_guess)
-    return result
+    solver = jaxopt.LBFGS(fun=f, tol=tol)
+    _, state = solver.run(initial_guess)
+    return -state.value, state
 
 
 # Generate random samples from a normal distribution
 np.random.seed(0)
-norm_samples = np.random.normal(loc=0, scale=1, size=1000)
+norm_samples = np.random.normal(loc=0, scale=2, size=1000)
 
 # Generate random samples from a uniform distribution
 uniform_bound = np.sqrt(3)
@@ -64,11 +72,22 @@ best_value = c4_values[jnp.argmin(bounds > 0)]
 
 hoeffdings_bound = (2 * uniform_bound) ** 2 / 4
 
+best_value_2, state = estimate_variance_proxy(
+    uniform_samples[:, None], best_value[None]
+)
+
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 6))
 
 ax1.plot(c4_values, bounds, color="black")
-ax1.plot(best_value, 0.0, marker="*", color="tab:blue", label="Best C4 Value")
-ax1.plot(1.0, 0.0, marker="*", color="tab:green", label="Correct Value")
+ax1.plot(best_value, 0.0, marker="*", color="tab:blue", label="Best C4 Value for MFG")
+ax1.plot(
+    best_value_2,
+    0.0,
+    marker="*",
+    color="tab:orange",
+    label="Best Value Optimization-based",
+)
+ax1.plot(1.0, 0.0, marker="*", markersize=1.5, color="tab:green", label="Correct Value")
 ax1.plot(
     hoeffdings_bound, 0.0, marker="*", color="tab:purple", label="Hoeffding's Bound"
 )

@@ -30,6 +30,7 @@ pre-commit = "^3.5.0"
 ruff = "^0.1.5"
 pytest = "^7.4.3"
 matplotlib = "^3.8.4"
+pyqt6 = "^6.7.0"
 
 [build-system]
 requires = ["poetry-core"]
