@@ -4,5 +4,5 @@ training:
   learning_rate: 0.001
   checkpoint_path: ${hydra:runtime.output_dir}/checkpoints
 data:
-  path: ${hydra:runtime.cwd}/data/processed.npz
+  path: ${hydra:runtime.cwd}/data/processed_new.npz
   train_split: 0.8
