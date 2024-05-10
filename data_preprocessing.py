@@ -10,7 +10,7 @@ from omegaconf import DictConfig
 def collect_file_ids(
     data_path: str, split: float | None = None
 ) -> tuple[list[int], list[int]] | list[int]:
-    files = list(Path(data_path).glob("label_data_*.npz"))
+    files = list(Path(data_path).glob("img_*.npz"))
     num_files = len(files)
     assert num_files > 0
     ids = list(range(num_files))
@@ -23,8 +23,8 @@ def collect_file_ids(
 
 
 def obs_and_labels(data_path, idx):
-    obs = f"obs_data_{idx}.npz"
-    labels = f"label_data_{idx}.npz"
+    obs = f"img_{idx}.npz"
+    labels = f"pose_{idx}.npz"
     obs_data = np.load(f"{data_path}/{obs}")
     labels_data = np.load(f"{data_path}/{labels}")
     return obs_data["arr_0"], labels_data["arr_0"]
