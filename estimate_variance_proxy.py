@@ -87,7 +87,7 @@ ax1.plot(
     color="tab:orange",
     label="Best Value Optimization-based",
 )
-ax1.plot(1.0, 0.0, marker="*", markersize=1.5, color="tab:green", label="Correct Value")
+ax1.plot(1.0, 0.0, marker="*", markersize=5, color="tab:green", label="Correct Value")
 ax1.plot(
     hoeffdings_bound, 0.0, marker="*", color="tab:purple", label="Hoeffding's Bound"
 )

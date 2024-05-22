@@ -11,9 +11,9 @@ def collect_file_ids(
     data_path: str, split: float | None = None
 ) -> tuple[list[int], list[int]] | list[int]:
     files = list(Path(data_path).glob("img_*.npz"))
+    ids = [int(str(name).split("_")[1].split(".")[0]) for name in files]
     num_files = len(files)
     assert num_files > 0
-    ids = list(range(num_files))
     if split is None:
         return ids
     train_size = int(split * num_files)
